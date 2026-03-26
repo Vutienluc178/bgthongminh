@@ -7,11 +7,22 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
     plugins: [react()],
-    base: '/', 
+    base: '/',
+    root: process.cwd(),
+    publicDir: 'public',
     define: {
-      // Shim process.env để tránh lỗi khi truy cập API Key, đồng thời hỗ trợ Vercel/GitHub
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY || env.VITE_GEMINI_API_KEY || ''),
-      'process.env.API_KEY': JSON.stringify(env.API_KEY || env.VITE_API_KEY || '')
+      'process.env.API_KEY': JSON.stringify(env.API_KEY || env.VITE_API_KEY || ''),
+      'process.env.NODE_ENV': JSON.stringify(mode)
+    },
+    resolve: {
+      extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json']
+    },
+    build: {
+      outDir: 'dist',
+      sourcemap: false,
+      minify: 'esbuild',
+      chunkSizeWarningLimit: 1600
     }
   };
 });
