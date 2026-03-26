@@ -7,20 +7,24 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
     plugins: [react()],
-    base: '/',
+    base: './',
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY || env.VITE_GEMINI_API_KEY || ''),
       'process.env.API_KEY': JSON.stringify(env.API_KEY || env.VITE_API_KEY || ''),
       'process.env.NODE_ENV': JSON.stringify(mode)
     },
-    resolve: {
-      extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json']
-    },
     build: {
       outDir: 'dist',
+      assetsDir: 'assets',
+      emptyOutDir: true,
       sourcemap: false,
       minify: 'esbuild',
-      chunkSizeWarningLimit: 1600
-    }
+      chunkSizeWarningLimit: 2000,
+      rollupOptions: {
+        input: {
+          main: './index.html',
+        },
+      },
+    },
   };
 });
